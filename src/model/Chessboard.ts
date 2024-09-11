@@ -53,6 +53,29 @@ export default class Chessboard {
 
   public threat: Piece | undefined = undefined;
 
+  public cementery = {
+    white: {
+      bishop: 0,
+      knight: 0,
+      queen: 0,
+      rook: 0,
+      pawn: 0,
+    },
+    black: {
+      bishop: 0,
+      knight: 0,
+      queen: 0,
+      rook: 0,
+      pawn: 0,
+    },
+  };
+
+  public listeners: {
+    onPieceMoved: ((to: Coord) => void)[];
+  } = {
+    onPieceMoved: [],
+  };
+
   public getPieceAt(row: number, col: number): Piece | undefined {
     if (
       row > this.rows.length - 1 ||
@@ -68,7 +91,7 @@ export default class Chessboard {
     );
   }
 
-  public getKing(variant: 'white' | 'black') {
+  public getKing(variant: FactionColor) {
     for (let i = 0; i < this.pieces.length; i++) {
       const piece = this.pieces[i];
       if (piece.type === 'king' && piece.variant === variant) {
@@ -90,6 +113,17 @@ export default class Chessboard {
   public toArray() {
     return this.pieces.map((p) => ({ type: p.type, coord: p.coord }));
   }
+
+  public addListener(
+    type: keyof Chessboard['listeners'],
+    listener: Chessboard['listeners']['onPieceMoved'][number],
+  ) {
+    this.listeners[type].push(listener);
+  }
+
+  public turn(): FactionColor {
+    return this.whiteTurn ? 'white' : 'black';
+  }
 }
 
 export type BoardProps = {
@@ -97,3 +131,5 @@ export type BoardProps = {
 };
 
 export type Coord = [number, number];
+
+export type FactionColor = 'white' | 'black';

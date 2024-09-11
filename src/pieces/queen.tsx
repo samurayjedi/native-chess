@@ -2,7 +2,7 @@ import React from 'react';
 import { Svg, Path, G, Circle, Polygon, Rect } from 'react-native-svg';
 import { PieceProps } from './types';
 
-export default function Queen({ variant = 'black', ...props }) {
+export default function Queen({ variant = 'black', ...props }: PieceProps) {
   return (
     <Svg {...props} viewBox="0 0 57 57">
       <G>

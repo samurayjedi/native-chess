@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import Piece from './Piece';
-import Chessboard, { Coord } from './Chessboard';
+import Chessboard, { Coord, FactionColor } from './Chessboard';
 
 // easy, the king can move 1 box to everywere
 export const moveValidator = (piece: Piece, destination: Coord) => {
@@ -13,7 +13,7 @@ export default class King extends Piece {
   public constructor(
     board: Chessboard,
     coord: Coord,
-    variant: 'white' | 'black' = 'black',
+    variant: FactionColor = 'black',
   ) {
     super(board, 'king', coord, variant);
   }

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import invariant from 'tiny-invariant';
 import Piece from './Piece';
-import Chessboard, { Coord } from './Chessboard';
+import Chessboard, { Coord, FactionColor } from './Chessboard';
 
 export const moveValidator = (piece: Piece, destination: Coord) => {
   const [, colDist] = piece.getDist(destination);
@@ -12,20 +12,43 @@ export const moveValidator = (piece: Piece, destination: Coord) => {
     : false;
 
   // the move is valid as long as the advance be one box in front or the first time two
-  return (
+  const validMove =
     colDist === 0 &&
     (canMove2 ||
-      piece.coord[0] - destination[0] === (piece.variant === 'white' ? 1 : -1))
+      piece.coord[0] - destination[0] === (piece.variant === 'white' ? 1 : -1));
+  const notAnyPiece = !piece.board.pieces.find((p) =>
+    p.isEqualLocation(destination),
   );
+
+  console.log(`validMove: ${validMove} && notAnyPiece: ${notAnyPiece}`);
+
+  return validMove && notAnyPiece;
 };
 
 export default class Pawn extends Piece {
   public constructor(
     board: Chessboard,
     coord: Coord,
-    variant: 'black' | 'white' = 'black',
+    variant: FactionColor = 'black',
   ) {
     super(board, 'pawn', coord, variant);
+  }
+
+  private isMovingDiagonal(destination: Coord) {
+    /** moving /\, forward */
+    const [rowDist, colDist] = this.getDist(destination);
+    if (rowDist === colDist && rowDist === 1) {
+      console.log(`${rowDist} === ${colDist} && ${rowDist} === 1`);
+
+      const validAxis =
+        this.variant === 'black'
+          ? this.coord[0] < destination[0]
+          : this.coord[0] > destination[0];
+
+      return validAxis;
+    }
+
+    return false;
   }
 
   public canMoveTo(destination: Coord): boolean {
@@ -34,20 +57,17 @@ export default class Pawn extends Piece {
       return false;
     }
 
-    const [rowDist, colDist] = this.getDist(destination);
-    // if the box has a piece
-    if (this.board.pieces.find((piece) => piece.isEqualLocation(destination))) {
-      /* i can move one box in / or \ if there is the oportunity of eat a piece !== variant */
-      const piece = this.board.getPieceAt(destination[0], destination[1]);
-      invariant(piece);
-      const validAxis =
-        this.variant === 'black'
-          ? this.coord[0] < destination[0]
-          : this.coord[0] > destination[0];
+    if (this.isMovingDiagonal(destination)) {
 
-      return rowDist === colDist && validAxis && this.variant !== piece.variant;
+      return Boolean(this.board.pieces.find((piwi) =>
+        piwi.isEqualLocation(destination) && this.variant !== piwi.variant,
+      ));
     }
 
     return moveValidator(this, destination);
+  }
+
+  public canAttack(destination: Coord): boolean {
+    if (this.isMovingDiagonal)
   }
 }

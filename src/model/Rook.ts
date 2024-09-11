@@ -1,5 +1,5 @@
 import Piece from './Piece';
-import Chessboard, { Coord } from './Chessboard';
+import Chessboard, { Coord, FactionColor } from './Chessboard';
 
 export const moveValidator = (p: Piece, destination: Coord) => {
   const [rowDist, colDist] = p.getDist(destination);
@@ -43,7 +43,7 @@ export default class Rook extends Piece {
   public constructor(
     board: Chessboard,
     coord: Coord,
-    variant: 'white' | 'black' = 'black',
+    variant: FactionColor = 'black',
   ) {
     super(board, 'rook', coord, variant);
   }

@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import _ from 'lodash';
 import { Animated } from 'react-native';
-import { PieceWrapper } from './StyledComponents';
-import { PieceProps } from '../../src/pieces/types';
-import { usePanResponder } from './Chessboard/hooks';
-import { Coord } from '../../src/model/Chessboard';
+import { PieceWrapper } from '../StyledComponents';
+import { PieceProps } from '../../../src/pieces/types';
+import { usePanResponder } from './hooks';
+import { Coord, FactionColor } from '../../../src/model/Chessboard';
 
 function DraggablePiece({ Component, variant, coord }: DraggablePieceProps) {
   const dragXY = useRef(new Animated.ValueXY()).current;
@@ -35,7 +35,7 @@ export default React.memo(DraggablePiece, _.isEqual);
 
 export interface DraggablePieceProps {
   Component: (props: PieceProps) => React.ReactNode;
-  variant: 'black' | 'white';
+  variant: FactionColor;
   coord: Coord;
 }
 
