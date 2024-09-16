@@ -1,6 +1,7 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import _ from 'lodash';
 import { LayoutRectangle } from 'react-native';
+import { api } from '../../../App';
 import { ChessboardContext, ChessboardContextType } from './hooks';
 import { PieceProps } from '../../../src/pieces/types';
 import { Coord } from '../../../src/model/Chessboard';
@@ -18,7 +19,6 @@ import bishop from '../../../src/pieces/bishop';
 import knight from '../../../src/pieces/knight';
 import rook from '../../../src/pieces/rook';
 import pawn from '../../../src/pieces/pawn';
-import { useApi } from '../hooks';
 
 const pieces = {
   king,
@@ -39,18 +39,24 @@ const assets = (() => {
 })();
 
 export default function Chessboard({ parentRectRef }: ChessboardProps) {
-  const api = useApi();
+  const [, forceRender] = useState(false);
   const squaresRef = useRef<SquareRef[][]>([[]]);
   const squaresCoord = useRef<LayoutRectangle[][]>([[]]);
   const ctxValue = useMemo<ChessboardContextType>(
     () => ({
-      api,
       parentRectRef, // later, refactor boardRectRef to parentRectRef!
       squaresRef: squaresRef.current,
       squaresCoord: squaresCoord.current,
     }),
     [],
   );
+
+  useEffect(() => {
+    /** force rerender the chessboard */
+    api.addListener('onChange', () => forceRender((prev) => !prev));
+
+    /** remember, later add a function for, when unmount, remove the previous listener */
+  }, []);
 
   return (
     <ChessboardContext.Provider value={ctxValue}>

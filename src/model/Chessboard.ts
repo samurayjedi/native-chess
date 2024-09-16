@@ -71,8 +71,10 @@ export default class Chessboard {
   };
 
   public listeners: {
-    onPieceMoved: ((to: Coord) => void)[];
+    onChange: (() => void)[];
+    onPieceMoved: ((to: Coord, from: Coord) => void)[];
   } = {
+    onChange: [],
     onPieceMoved: [],
   };
 
@@ -114,11 +116,12 @@ export default class Chessboard {
     return this.pieces.map((p) => ({ type: p.type, coord: p.coord }));
   }
 
-  public addListener(
-    type: keyof Chessboard['listeners'],
-    listener: Chessboard['listeners']['onPieceMoved'][number],
+  public addListener<T extends keyof Chessboard['listeners']>(
+    type: T,
+    listener: Chessboard['listeners'][T][number],
   ) {
-    this.listeners[type].push(listener);
+    /** fix later this 'as any' */
+    this.listeners[type].push(listener as any);
   }
 
   public turn(): FactionColor {

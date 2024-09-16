@@ -1,15 +1,22 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Animated, LayoutRectangle, PanResponder } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import ChessboardModel, { Coord } from '../../../src/model/Chessboard';
-import React from 'react';
+import { api } from '../../../App';
+import { Coord } from '../../../src/model/Chessboard';
 import { SquareRef } from './Square';
 
 export function usePanResponder(
   coordRef: React.MutableRefObject<Coord>,
   position: Animated.ValueXY,
 ) {
-  const { api, parentRectRef, squaresCoord, squaresRef } =
+  const { parentRectRef, squaresCoord, squaresRef } =
     useContext(ChessboardContext);
   const [dragging, setDragging] = useState(false);
   const lastCoord = useRef<Coord | undefined>(undefined);
@@ -128,7 +135,6 @@ export const ChessboardContext = React.createContext<ChessboardContextType>(
 );
 
 export interface ChessboardContextType {
-  api: ChessboardModel;
   parentRectRef: React.MutableRefObject<LayoutRectangle>;
   squaresRef: SquareRef[][];
   squaresCoord: LayoutRectangle[][];

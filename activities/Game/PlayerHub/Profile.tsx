@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react';
 import styled from '@emotion/native';
+import { useAppSelector } from '../../../store/hooks';
 import { PlayerHubContext } from '.';
-import { useGameContext } from '../hooks';
 
 const users = {
   black: {
@@ -17,7 +17,7 @@ const users = {
 };
 
 export default function Profile() {
-  const turn = useGameContext();
+  const turn = useAppSelector((state) => state.chess.turn);
   const { variant } = useContext(PlayerHubContext);
 
   return (

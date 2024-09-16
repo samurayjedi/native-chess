@@ -1,40 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import Constants from 'expo-constants';
-import styled from '@emotion/native';
+import { ThemeProvider } from '@emotion/react';
+import { Provider } from 'react-redux';
+import Chessboard from './src/model/Chessboard';
+import store from './store';
+import PIWI_THEME from './src/theme';
+import Main from './src/components/Main';
 import Game from './activities/Game';
 
+export const api = new Chessboard();
 export default function App() {
   return (
-    <>
-      <Root>
-        <Background source={require('./assets/background.png')} />
-        <Game />
-      </Root>
-      <StatusBar style="light" />
-    </>
+    <Provider store={store}>
+      <ThemeProvider theme={PIWI_THEME}>
+        <Main>
+          <Game />
+        </Main>
+        <StatusBar style="light" />
+      </ThemeProvider>
+    </Provider>
   );
 }
-
-const Root = styled.View({
-  flex: 1,
-  backgroundColor: '#000',
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingTop: Constants.statusBarHeight,
-});
-
-const Background = styled.Image({
-  position: 'absolute',
-  top: 0,
-  bottom: 0,
-  left: 0,
-  right: 0,
-  flex: 1,
-  resizeMode: 'cover',
-});
-
-const Piwi = styled.View({
-  width: 100,
-  height: 100,
-  alignSelf: 'center',
-});

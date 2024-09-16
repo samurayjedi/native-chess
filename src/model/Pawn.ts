@@ -20,8 +20,6 @@ export const moveValidator = (piece: Piece, destination: Coord) => {
     p.isEqualLocation(destination),
   );
 
-  console.log(`validMove: ${validMove} && notAnyPiece: ${notAnyPiece}`);
-
   return validMove && notAnyPiece;
 };
 
@@ -38,8 +36,6 @@ export default class Pawn extends Piece {
     /** moving /\, forward */
     const [rowDist, colDist] = this.getDist(destination);
     if (rowDist === colDist && rowDist === 1) {
-      console.log(`${rowDist} === ${colDist} && ${rowDist} === 1`);
-
       const validAxis =
         this.variant === 'black'
           ? this.coord[0] < destination[0]
@@ -58,16 +54,18 @@ export default class Pawn extends Piece {
     }
 
     if (this.isMovingDiagonal(destination)) {
-
-      return Boolean(this.board.pieces.find((piwi) =>
-        piwi.isEqualLocation(destination) && this.variant !== piwi.variant,
-      ));
+      return Boolean(
+        this.board.pieces.find(
+          (piwi) =>
+            piwi.isEqualLocation(destination) && this.variant !== piwi.variant,
+        ),
+      );
     }
 
     return moveValidator(this, destination);
   }
 
   public canAttack(destination: Coord): boolean {
-    if (this.isMovingDiagonal)
+    return this.isMovingDiagonal(destination);
   }
 }

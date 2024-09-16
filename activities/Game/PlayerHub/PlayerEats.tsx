@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import styled from '@emotion/native';
+import { api } from '../../../App';
 import { PlayerHubContext } from '.';
 import Queen from '../../../src/pieces/queen';
 import Bishop from '../../../src/pieces/bishop';
@@ -7,11 +8,9 @@ import Rook from '../../../src/pieces/rook';
 import Knight from '../../../src/pieces/knight';
 import Pawn from '../../../src/pieces/pawn';
 import { FactionColor } from '../../../src/model/Chessboard';
-import { useApi } from '../hooks';
 
 export default function PlayerEats() {
   const { variant } = useContext(PlayerHubContext);
-  const api = useApi();
   const cementery = api.cementery[variant];
 
   return (

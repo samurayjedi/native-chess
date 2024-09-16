@@ -45,7 +45,7 @@ export default class King extends Piece {
     for (let i = 0; i < this.board.pieces.length; i++) {
       const p = this.board.pieces[i];
 
-      if (p.variant !== this.variant && p.canMoveTo(destination)) {
+      if (p.variant !== this.variant && p.canAttack(destination)) {
         // the square is threatened, can't move
         restoreTemp();
         return false;

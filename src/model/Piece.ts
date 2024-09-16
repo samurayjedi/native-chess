@@ -11,7 +11,7 @@ export default abstract class Piece {
     'knight',
   ] as const;
 
-  protected moves: number;
+  public moves: number;
 
   public constructor(
     public board: Chessboard,
@@ -112,6 +112,8 @@ export default abstract class Piece {
 
       return false;
     });
+    // temp of the original position
+    const from = this.coord;
     // perform the move
     this.coord = coord;
     this.moves++;
@@ -121,14 +123,15 @@ export default abstract class Piece {
     const king = this.board.getKing(
       this.variant === 'black' ? 'white' : 'black',
     );
-    if (this.canMoveTo(king.coord)) {
+    if (this.canAttack(king.coord)) {
       console.log(`check!!!`);
       this.board.threat = this;
     }
     // call listeners
     this.board.listeners.onPieceMoved.forEach((listener) =>
-      _.attempt(listener, [coord]),
+      _.attempt(listener, coord, from),
     );
+    this.board.listeners.onChange.forEach((listener) => _.attempt(listener));
   }
 }
 

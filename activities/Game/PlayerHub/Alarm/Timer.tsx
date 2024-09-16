@@ -1,12 +1,12 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import _ from 'lodash';
 import styled from '@emotion/native';
-import { useGameContext } from '../../hooks';
+import { useAppSelector } from '../../../../store/hooks';
 import { PlayerHubContext } from '..';
 
 const init = 0;
 function Timer() {
-  const turn = useGameContext();
+  const turn = useAppSelector((state) => state.chess.turn);
   const { variant } = useContext(PlayerHubContext);
   const [time, setTime] = useState(init);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
