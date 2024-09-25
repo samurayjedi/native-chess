@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import invariant from 'tiny-invariant';
-import Piece from './Piece';
-import Chessboard, { Coord, FactionColor } from './Chessboard';
+import Piece from '../Piece';
+import Engine from '../';
+import { Coord, FactionColor } from '../types';
 
 export const moveValidator = (piece: Piece, destination: Coord) => {
   const [, colDist] = piece.getDist(destination);
@@ -16,20 +16,19 @@ export const moveValidator = (piece: Piece, destination: Coord) => {
     colDist === 0 &&
     (canMove2 ||
       piece.coord[0] - destination[0] === (piece.variant === 'white' ? 1 : -1));
-  const notAnyPiece = !piece.board.pieces.find((p) =>
-    p.isEqualLocation(destination),
-  );
+  const notAnyPiece = !piece.board.find((p) => p.isEqualLocation(destination));
 
   return validMove && notAnyPiece;
 };
 
 export default class Pawn extends Piece {
   public constructor(
-    board: Chessboard,
+    board: Engine,
     coord: Coord,
     variant: FactionColor = 'black',
+    moves: number = 0,
   ) {
-    super(board, 'pawn', coord, variant);
+    super(board, 'pawn', coord, variant, moves);
   }
 
   private isMovingDiagonal(destination: Coord) {
@@ -55,7 +54,7 @@ export default class Pawn extends Piece {
 
     if (this.isMovingDiagonal(destination)) {
       return Boolean(
-        this.board.pieces.find(
+        this.board.find(
           (piwi) =>
             piwi.isEqualLocation(destination) && this.variant !== piwi.variant,
         ),

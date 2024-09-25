@@ -8,12 +8,12 @@ import React, {
 } from 'react';
 import { Animated, LayoutRectangle, PanResponder } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { api } from '../../../App';
-import { Coord } from '../../../src/model/Chessboard';
+import { Coord } from '../../../Engine/types';
 import { SquareRef } from './Square';
+import Piece from '../../../Engine/Piece';
 
 export function usePanResponder(
-  coordRef: React.MutableRefObject<Coord>,
+  ref: React.MutableRefObject<Piece>,
   position: Animated.ValueXY,
 ) {
   const { parentRectRef, squaresCoord, squaresRef } =
@@ -31,7 +31,6 @@ export function usePanResponder(
       },
       onPanResponderMove: (e, gs) => {
         const containerRect = parentRectRef.current;
-        const squareCoord = coordRef.current;
         /** i must sustract the current x/y board coord because the alignItems: 'center' and justifyContent: 'center'
          * of the Root...
          */
@@ -42,12 +41,7 @@ export function usePanResponder(
           rowArray.forEach(({ x, y, width, height }, col) => {
             const [, setState] = squaresRef[row][col].state;
             if (px >= x && px < x + width && py >= y && py < y + height) {
-              const piece = api.getPieceAt(squareCoord[0], squareCoord[1]);
-              if (!piece) {
-                throw new Error(
-                  `Piece not found in coords ${squareCoord[0]},${squareCoord[1]} when dragging.`,
-                );
-              }
+              const piece = ref.current;
               const destination = [row, col] as Coord;
               if (piece.isEqualLocation(destination)) {
                 lastCoord.current = undefined;
@@ -82,15 +76,9 @@ export function usePanResponder(
         )(e, gs);
       },
       onPanResponderRelease: () => {
-        const squareCoord = coordRef.current;
         // move the piece
         if (lastCoord.current) {
-          const piece = api.getPieceAt(squareCoord[0], squareCoord[1]);
-          if (!piece) {
-            throw new Error(
-              `Piece not found in coords ${squareCoord[0]},${squareCoord[1]} when dropping.`,
-            );
-          }
+          const piece = ref.current;
           piece.moveTo(lastCoord.current);
         }
         // set all squares to iddle

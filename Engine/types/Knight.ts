@@ -1,5 +1,6 @@
-import Piece from './Piece';
-import Chessboard, { Coord, FactionColor } from './Chessboard';
+import Piece from '../Piece';
+import Engine from '../';
+import { Coord, FactionColor } from '../types';
 
 export const moveValidator = (p: Piece, destination: Coord) => {
   const [rowDist, colDist] = p.getDist(destination);
@@ -12,11 +13,12 @@ export const moveValidator = (p: Piece, destination: Coord) => {
 
 export default class Knight extends Piece {
   public constructor(
-    board: Chessboard,
+    board: Engine,
     coord: Coord,
     variant: FactionColor = 'black',
+    moves: number = 0,
   ) {
-    super(board, 'knight', coord, variant);
+    super(board, 'knight', coord, variant, moves);
   }
 
   public canMoveTo(destination: Coord): boolean {
@@ -26,7 +28,7 @@ export default class Knight extends Piece {
     }
 
     if (
-      this.board.pieces.find((piece) => {
+      this.board.find((piece) => {
         if (piece.isEqualLocation(destination)) {
           // restraint move if the destination contains a piece of the same color
           return this.variant === piece.variant;

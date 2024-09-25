@@ -1,9 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { LayoutRectangle } from 'react-native';
 import _ from 'lodash';
+import Engine from '../../Engine';
 import { useAppDispatch } from '../../store/hooks';
-import { api } from '../../App';
-import { changeTurn, recordMove } from '../../store/chess';
 import PlayerHub from './PlayerHub';
 import Chessboard from './Chessboard';
 import { Wrapper, Letters, Letter, Numbers, Number } from './StyledComponents';
@@ -17,25 +16,18 @@ export default function Game() {
     height: 0,
   });
 
-  useEffect(() => {
-    api.addListener('onPieceMoved', (to, from) => {
-      dispatch(recordMove({ from, to }));
-      dispatch(changeTurn(api.turn()));
-    });
-  }, []);
-
   return (
     <>
       <PlayerHub variant="black" />
       <Letters>
-        {api.cols.map((colLetter) => (
+        {Engine.cols.map((colLetter) => (
           <Letter key={`letter-${colLetter}`}>{colLetter}</Letter>
         ))}
       </Letters>
       <Wrapper onLayout={(e) => (wrapperRef.current = e.nativeEvent.layout)}>
         <Chessboard parentRectRef={wrapperRef} />
         <Numbers>
-          {api.rows.map((rowNumber) => (
+          {Engine.rows.map((rowNumber) => (
             <Number key={`row-number-${rowNumber}`}>{rowNumber}</Number>
           ))}
         </Numbers>

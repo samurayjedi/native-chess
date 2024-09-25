@@ -1,6 +1,7 @@
 import _ from 'lodash';
-import Piece from './Piece';
-import Chessboard, { Coord, FactionColor } from './Chessboard';
+import Engine from '../';
+import Piece from '../Piece';
+import { Coord, FactionColor } from '../types';
 
 // easy, the king can move 1 box to everywere
 export const moveValidator = (piece: Piece, destination: Coord) => {
@@ -11,48 +12,36 @@ export const moveValidator = (piece: Piece, destination: Coord) => {
 
 export default class King extends Piece {
   public constructor(
-    board: Chessboard,
+    board: Engine,
     coord: Coord,
     variant: FactionColor = 'black',
+    moves: number = 0,
   ) {
-    super(board, 'king', coord, variant);
+    super(board, 'king', coord, variant, moves);
   }
 
   public canMove(destination: Coord): boolean {
-    let temp: Piece | undefined = undefined;
     /* verify if the king can eat a piece whithout fall in check, first remove the piece from the square
      * if any is there and variant !== king variant. */
-    _.remove(this.board.pieces, (p) => {
-      const enemyInSquare =
-        p.isEqualLocation(destination) && p.variant !== this.variant;
-      if (enemyInSquare) {
-        temp = p;
-      }
+    const fakePieces = _.cloneDeep(this.board.pieces());
+    _.remove(fakePieces, (sourcePiece) => {
+      const p = this.board.createPieceEngine(sourcePiece);
 
-      return enemyInSquare;
+      return p.isEqualLocation(destination) && p.variant !== this.variant;
     });
-    /** i only remove the piece for checks, the logic for eat that piece (if posible) is ahead,
-     * in canMoveTo method, so, i need restore the piece after finished all tasks. */
-    const restoreTemp = () => {
-      if (temp) {
-        this.board.pieces.push(temp);
-      }
-    };
 
     /** Now i can perform a check of all enemy pieces, if any of them is a threat for the king,
      * restraint the movement.
      */
-    for (let i = 0; i < this.board.pieces.length; i++) {
-      const p = this.board.pieces[i];
+    for (let i = 0; i < fakePieces.length; i++) {
+      const sourcePiece = fakePieces[i];
+      const p = this.board.createPieceEngine(sourcePiece);
 
       if (p.variant !== this.variant && p.canAttack(destination)) {
         // the square is threatened, can't move
-        restoreTemp();
         return false;
       }
     }
-
-    restoreTemp();
 
     return super.canMove(destination);
   }
@@ -64,7 +53,7 @@ export default class King extends Piece {
     }
 
     if (
-      this.board.pieces.find((piece) => {
+      this.board.find((piece) => {
         if (piece.isEqualLocation(destination)) {
           // restraint move if the destination contains a piece of the same color
           return this.variant === piece.variant;

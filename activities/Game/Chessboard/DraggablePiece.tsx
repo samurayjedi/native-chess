@@ -1,19 +1,72 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import _ from 'lodash';
 import { Animated } from 'react-native';
 import { PieceWrapper } from '../StyledComponents';
-import { PieceProps } from '../../../src/pieces/types';
 import { usePanResponder } from './hooks';
-import { Coord, FactionColor } from '../../../src/model/Chessboard';
+import { Coord } from '../../../Engine/types';
+import king from '../../../src/pieces/king';
+import queen from '../../../src/pieces/queen';
+import bishop from '../../../src/pieces/bishop';
+import knight from '../../../src/pieces/knight';
+import rook from '../../../src/pieces/rook';
+import pawn from '../../../src/pieces/pawn';
+import { useAppSelector } from '../../../store/hooks';
+import Engine from '../../../Engine';
 
-function DraggablePiece({ Component, variant, coord }: DraggablePieceProps) {
+const assets = {
+  king,
+  queen,
+  bishop,
+  knight,
+  rook,
+  pawn,
+} as const;
+
+export default function DraggablePiece(props: DraggablePieceProps) {
+  const { coord } = props;
+  const pieceIndex = useAppSelector(
+    useCallback(
+      (state) => {
+        const engine = new Engine(state.chess.board);
+        try {
+          return engine.getPieceIndex(coord[0], coord[1]);
+        } catch (error) {
+          return undefined;
+        }
+      },
+      [coord],
+    ),
+  );
+
+  if (pieceIndex) {
+    return <PollitoDraggablePiece index={pieceIndex} {...props} />;
+  }
+
+  return <PieceWrapper />;
+}
+
+function PollitoDraggablePiece({
+  coord,
+  index,
+}: { index: number } & DraggablePieceProps) {
+  const piece = useAppSelector(
+    useCallback(
+      (state) => {
+        const engine = new Engine(state.chess.board);
+
+        return engine.createPieceEngine(state.chess.board.pieces[index]);
+      },
+      [index],
+    ),
+  );
   const dragXY = useRef(new Animated.ValueXY()).current;
-  const currentCoord = useRef(coord);
-  const [dragging, panResponder] = usePanResponder(currentCoord, dragXY);
+  const ref = useRef(piece);
+  const [dragging, panResponder] = usePanResponder(ref, dragXY);
+  const Component = assets[piece.type];
 
   useEffect(() => {
-    currentCoord.current = coord;
-  }, [coord]);
+    ref.current = piece;
+  }, [piece]);
 
   return (
     <PieceWrapper>
@@ -25,17 +78,13 @@ function DraggablePiece({ Component, variant, coord }: DraggablePieceProps) {
         }}
         {...panResponder.panHandlers}
       >
-        <Component variant={variant} />
+        <Component variant={piece.variant} />
       </Animated.View>
     </PieceWrapper>
   );
 }
 
-export default React.memo(DraggablePiece, _.isEqual);
-
 export interface DraggablePieceProps {
-  Component: (props: PieceProps) => React.ReactNode;
-  variant: FactionColor;
   coord: Coord;
 }
 

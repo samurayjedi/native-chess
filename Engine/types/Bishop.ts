@@ -1,6 +1,7 @@
 import _ from 'lodash';
-import Piece from './Piece';
-import Chessboard, { Coord, FactionColor } from './Chessboard';
+import Engine from '../';
+import Piece from '../Piece';
+import type { Coord, FactionColor } from '../types';
 
 export const moveValidator = (p: Piece, destination: Coord) => {
   const [rowDist, colDist] = p.getDist(destination);
@@ -9,9 +10,7 @@ export const moveValidator = (p: Piece, destination: Coord) => {
     const whithoutObstacles = (i: number, j: number) => {
       let coordToCheck: Coord = [p.coord[0] + i, p.coord[1] + j];
       while (!_.isEqual(coordToCheck, destination)) {
-        if (
-          p.board.pieces.find((piece) => piece.isEqualLocation(coordToCheck))
-        ) {
+        if (p.board.find((piece) => piece.isEqualLocation(coordToCheck))) {
           return false;
         }
 
@@ -58,11 +57,12 @@ export const moveValidator = (p: Piece, destination: Coord) => {
 
 export default class Bishop extends Piece {
   public constructor(
-    board: Chessboard,
+    board: Engine,
     coord: Coord,
-    variant: FactionColor = 'black',
+    variant: FactionColor,
+    moves: number,
   ) {
-    super(board, 'bishop', coord, variant);
+    super(board, 'bishop', coord, variant, moves);
   }
 
   public canMoveTo(destination: Coord): boolean {
@@ -72,7 +72,7 @@ export default class Bishop extends Piece {
     }
 
     if (
-      this.board.pieces.find((piece) => {
+      this.board.find((piece) => {
         if (piece.isEqualLocation(destination)) {
           // restraint move if the destination contains a piece of the same color
           return this.variant === piece.variant;
