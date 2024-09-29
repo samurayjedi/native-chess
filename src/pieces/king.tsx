@@ -1,8 +1,9 @@
 import React from 'react';
-import { Svg, Path, G, Circle, Polygon, Rect } from 'react-native-svg';
+import _ from 'lodash';
+import { Svg, Path, G, Polygon, Rect } from 'react-native-svg';
 import { PieceProps } from './types';
 
-export default function King({ variant = 'black', ...props }: PieceProps) {
+function King({ variant = 'black', ...props }: PieceProps) {
   return (
     <Svg {...props} viewBox="0 0 58 58">
       <G>
@@ -45,3 +46,5 @@ C41.5,24.881,40.381,26,39,26z"
     </Svg>
   );
 }
+
+export default React.memo(King, _.isEqual);

@@ -1,8 +1,9 @@
 import React from 'react';
+import _ from 'lodash';
 import { Svg, Path, G, Circle, Polygon, Rect } from 'react-native-svg';
 import { PieceProps } from './types';
 
-export default function Pawn({ variant = 'black', ...props }: PieceProps) {
+function Pawn({ variant = 'black', ...props }: PieceProps) {
   return (
     <Svg {...props} viewBox="0 0 58 58">
       <G>
@@ -49,3 +50,5 @@ export default function Pawn({ variant = 'black', ...props }: PieceProps) {
     </Svg>
   );
 }
+
+export default React.memo(Pawn, _.isEqual);

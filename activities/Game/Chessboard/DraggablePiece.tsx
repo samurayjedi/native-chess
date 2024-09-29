@@ -12,6 +12,9 @@ import rook from '../../../src/pieces/rook';
 import pawn from '../../../src/pieces/pawn';
 import { useAppSelector } from '../../../store/hooks';
 import Engine from '../../../Engine';
+import { PieceArray } from '../../../Engine/Piece';
+import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from '../../../store';
 
 const assets = {
   king,
@@ -24,42 +27,40 @@ const assets = {
 
 export default function DraggablePiece(props: DraggablePieceProps) {
   const { coord } = props;
-  const pieceIndex = useAppSelector(
-    useCallback(
-      (state) => {
-        const engine = new Engine(state.chess.board);
-        try {
-          return engine.getPieceIndex(coord[0], coord[1]);
-        } catch (error) {
-          return undefined;
-        }
-      },
-      [coord],
-    ),
-  );
+  const havePiece = useAppSelector((state) => {
+    const engine = new Engine(state.chess.board);
+    try {
+      engine.getPieceAt(coord[0], coord[1]);
 
-  if (pieceIndex) {
-    return <PollitoDraggablePiece index={pieceIndex} {...props} />;
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
+  if (havePiece) {
+    return <PollitoDraggablePiece {...props} />;
   }
 
   return <PieceWrapper />;
 }
 
-function PollitoDraggablePiece({
-  coord,
-  index,
-}: { index: number } & DraggablePieceProps) {
-  const piece = useAppSelector(
-    useCallback(
-      (state) => {
-        const engine = new Engine(state.chess.board);
+function makePieceSelector() {
+  return createSelector(
+    (state: RootState) => state.chess.board,
+    (state: RootState, coord: Coord) => coord,
+    (board, coord) => {
+      const engine = new Engine(board);
 
-        return engine.createPieceEngine(state.chess.board.pieces[index]);
-      },
-      [index],
-    ),
+      return engine.getPieceEngineAt(coord[0], coord[1]);
+    },
   );
+}
+
+function PollitoDraggablePiece({ coord }: DraggablePieceProps) {
   const dragXY = useRef(new Animated.ValueXY()).current;
+  const selectPiece = makePieceSelector();
+  const piece = useAppSelector((state) => selectPiece(state, coord));
   const ref = useRef(piece);
   const [dragging, panResponder] = usePanResponder(ref, dragXY);
   const Component = assets[piece.type];

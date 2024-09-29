@@ -1,13 +1,8 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Animated, LayoutRectangle, PanResponder } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { useAppDispatch } from '../../../store/hooks';
+import { movePiece } from '../../../store/chess';
 import { Coord } from '../../../Engine/types';
 import { SquareRef } from './Square';
 import Piece from '../../../Engine/Piece';
@@ -16,8 +11,9 @@ export function usePanResponder(
   ref: React.MutableRefObject<Piece>,
   position: Animated.ValueXY,
 ) {
-  const { parentRectRef, squaresCoord, squaresRef } =
-    useContext(ChessboardContext);
+  const dispatch = useAppDispatch();
+  const { parentRectRef, squaresCoord, squaresRef } = useChessboardContext();
+
   const [dragging, setDragging] = useState(false);
   const lastCoord = useRef<Coord | undefined>(undefined);
 
@@ -79,7 +75,7 @@ export function usePanResponder(
         // move the piece
         if (lastCoord.current) {
           const piece = ref.current;
-          piece.moveTo(lastCoord.current);
+          dispatch(movePiece({ from: piece.coord, to: lastCoord.current }));
         }
         // set all squares to iddle
         squaresRef.forEach((rowArray) => {
@@ -118,9 +114,19 @@ export function useOrientation() {
   return orientation;
 }
 
-export const ChessboardContext = React.createContext<ChessboardContextType>(
-  {} as unknown as any,
-);
+export const ChessboardContext = React.createContext<
+  ChessboardContextType | undefined
+>(undefined);
+
+export function useChessboardContext() {
+  const ctx = useContext(ChessboardContext);
+
+  if (!ctx) {
+    throw new Error('ChessboardContext undefined!!!');
+  }
+
+  return ctx;
+}
 
 export interface ChessboardContextType {
   parentRectRef: React.MutableRefObject<LayoutRectangle>;

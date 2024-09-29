@@ -1,25 +1,40 @@
 import { useContext } from 'react';
+import { createSelector } from '@reduxjs/toolkit';
 import styled from '@emotion/native';
-import { api } from '../../../App';
+import { useAppSelector } from '../../../store/hooks';
 import { PlayerHubContext } from '.';
 import Queen from '../../../src/pieces/queen';
 import Bishop from '../../../src/pieces/bishop';
 import Rook from '../../../src/pieces/rook';
 import Knight from '../../../src/pieces/knight';
 import Pawn from '../../../src/pieces/pawn';
-import { FactionColor } from '../../../src/model/Chessboard';
+import { FactionColor } from '../../../Engine/types';
+import { RootState } from '../../../store';
+
+function makeCementerySelector() {
+  return createSelector(
+    [
+      (state: RootState) => state.chess.board.cementery,
+      (state: RootState, variant: FactionColor) => variant,
+    ],
+    (cementery, variant) => cementery[variant],
+  );
+}
 
 export default function PlayerEats() {
   const { variant } = useContext(PlayerHubContext);
-  const cementery = api.cementery[variant];
+  const selector = makeCementerySelector();
+  const { queen, knight, bishop, rook, pawn } = useAppSelector((state) =>
+    selector(state, variant),
+  );
 
   return (
     <Cementery variant={variant}>
-      <Eated piece="Queen" variant={variant} count={cementery['queen']} />
-      <Eated piece="Knight" variant={variant} count={cementery['knight']} />
-      <Eated piece="Bishop" variant={variant} count={cementery['bishop']} />
-      <Eated piece="Rook" variant={variant} count={cementery['rook']} />
-      <Eated piece="Pawn" variant={variant} count={cementery['pawn']} />
+      <Eated piece="Queen" variant={variant} count={queen} />
+      <Eated piece="Knight" variant={variant} count={knight} />
+      <Eated piece="Bishop" variant={variant} count={bishop} />
+      <Eated piece="Rook" variant={variant} count={rook} />
+      <Eated piece="Pawn" variant={variant} count={pawn} />
     </Cementery>
   );
 }

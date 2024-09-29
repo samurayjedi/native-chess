@@ -3,7 +3,7 @@ import styled from '@emotion/native';
 import Profile from './Profile';
 import PlayerEats from './PlayerEats';
 import Alarm from './Alarm';
-import { FactionColor } from '../../../src/model/Chessboard';
+import { FactionColor } from '../../../Engine/types';
 
 export const PlayerHubContext = React.createContext<OpponentProps>({
   variant: 'black',

@@ -102,7 +102,8 @@ export default abstract class Piece {
     // if the position have a piece
     _.remove(gameData.pieces, (pSource) => {
       const p = this.board.createPieceEngine(pSource);
-      if (p.isEqualLocation(coord)) {
+      if (p.isEqualLocation(coord) && p.variant !== this.variant) {
+        console.log(`${p.variant} !== ${this.variant}`);
         if (p.type === 'king') {
           throw new Error('Cannot eat the king!!!!');
         }
@@ -119,9 +120,19 @@ export default abstract class Piece {
       return false;
     });
     // perform the move
-    const index = this.board.getPieceIndex(this.coord[0], this.coord[1]);
-    gameData.pieces[index].coord = coord;
-    gameData.pieces[index].moves++;
+    let i = 0;
+    for (i = 0; i < gameData.pieces.length; i++) {
+      const rawPiece = gameData.pieces[i];
+      if (
+        rawPiece.coord[0] === this.coord[0] &&
+        rawPiece.coord[1] === this.coord[1]
+      ) {
+        gameData.pieces[i].coord = coord;
+        gameData.pieces[i].moves++;
+        break;
+      }
+    }
+
     // change turn
     gameData.turn = gameData.turn === 'white' ? 'black' : 'white';
     // check if the opposite king is in check
@@ -130,7 +141,7 @@ export default abstract class Piece {
     );
     if (this.canAttack(king.coord)) {
       console.log(`check!!!`);
-      gameData.threat = gameData.pieces[index];
+      gameData.threat = gameData.pieces[i];
     }
 
     return gameData;

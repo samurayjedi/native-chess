@@ -14,10 +14,10 @@ const users = {
     frame: require('../../../assets/profile_frames/frame1.png'),
     nickname: 'samurayjedi',
   },
-};
+} as const;
 
 export default function Profile() {
-  const turn = useAppSelector((state) => state.chess.turn);
+  const turn = useAppSelector((state) => state.chess.board.turn);
   const { variant } = useContext(PlayerHubContext);
 
   return (

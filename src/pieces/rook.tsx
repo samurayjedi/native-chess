@@ -1,8 +1,9 @@
 import React from 'react';
+import _ from 'lodash';
 import { Svg, Path, G, Circle, Polygon, Rect } from 'react-native-svg';
 import { PieceProps } from './types';
 
-export default function Rook({ variant = 'black', ...props }: PieceProps) {
+function Rook({ variant = 'black', ...props }: PieceProps) {
   return (
     <Svg {...props} viewBox="0 0 53 53">
       <G>
@@ -43,3 +44,5 @@ export default function Rook({ variant = 'black', ...props }: PieceProps) {
     </Svg>
   );
 }
+
+export default React.memo(Rook, _.isEqual);

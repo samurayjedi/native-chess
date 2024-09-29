@@ -3,7 +3,6 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import Engine from '../Engine';
 import { GameData, FactionColor, Coord } from '../Engine/types';
 import { PieceArray } from '../Engine/Piece';
-import { RootState } from '.';
 
 const initialState: State = {
   board: {
@@ -26,21 +25,21 @@ const initialState: State = {
       { type: 'pawn', coord: [1, 7], variant: 'black', moves: 0 },
       // white
       { type: 'king', coord: [7, 4], variant: 'white', moves: 0 },
-      { type: 'king', coord: [7, 3], variant: 'white', moves: 0 },
-      { type: 'king', coord: [7, 5], variant: 'white', moves: 0 },
-      { type: 'king', coord: [7, 2], variant: 'white', moves: 0 },
-      { type: 'king', coord: [7, 1], variant: 'white', moves: 0 },
-      { type: 'king', coord: [7, 6], variant: 'white', moves: 0 },
-      { type: 'king', coord: [7, 0], variant: 'white', moves: 0 },
-      { type: 'king', coord: [7, 7], variant: 'white', moves: 0 },
-      { type: 'king', coord: [6, 0], variant: 'white', moves: 0 },
-      { type: 'king', coord: [6, 1], variant: 'white', moves: 0 },
-      { type: 'king', coord: [6, 2], variant: 'white', moves: 0 },
-      { type: 'king', coord: [6, 3], variant: 'white', moves: 0 },
-      { type: 'king', coord: [6, 4], variant: 'white', moves: 0 },
-      { type: 'king', coord: [6, 5], variant: 'white', moves: 0 },
-      { type: 'king', coord: [6, 6], variant: 'white', moves: 0 },
-      { type: 'king', coord: [6, 7], variant: 'white', moves: 0 },
+      { type: 'queen', coord: [7, 3], variant: 'white', moves: 0 },
+      { type: 'bishop', coord: [7, 5], variant: 'white', moves: 0 },
+      { type: 'bishop', coord: [7, 2], variant: 'white', moves: 0 },
+      { type: 'knight', coord: [7, 1], variant: 'white', moves: 0 },
+      { type: 'knight', coord: [7, 6], variant: 'white', moves: 0 },
+      { type: 'rook', coord: [7, 0], variant: 'white', moves: 0 },
+      { type: 'rook', coord: [7, 7], variant: 'white', moves: 0 },
+      { type: 'pawn', coord: [6, 0], variant: 'white', moves: 0 },
+      { type: 'pawn', coord: [6, 1], variant: 'white', moves: 0 },
+      { type: 'pawn', coord: [6, 2], variant: 'white', moves: 0 },
+      { type: 'pawn', coord: [6, 3], variant: 'white', moves: 0 },
+      { type: 'pawn', coord: [6, 4], variant: 'white', moves: 0 },
+      { type: 'pawn', coord: [6, 5], variant: 'white', moves: 0 },
+      { type: 'pawn', coord: [6, 6], variant: 'white', moves: 0 },
+      { type: 'pawn', coord: [6, 7], variant: 'white', moves: 0 },
     ],
     turn: 'white',
     cementery: {
@@ -81,13 +80,13 @@ export const chessSlice = createSlice({
     movePiece: (
       state,
       action: PayloadAction<{
-        piece: PieceArray;
+        from: Coord;
         to: Coord;
       }>,
     ) => {
-      const { piece, to } = action.payload;
+      const { from, to } = action.payload;
       const engine = new Engine(state.board);
-      const p = engine.createPieceEngine(piece);
+      const p = engine.getPieceEngineAt(from[0], from[1]);
       const newData = p.moveTo(to);
 
       if (newData) {
@@ -97,7 +96,7 @@ export const chessSlice = createSlice({
   },
 });
 
-export const { redo, record } = chessSlice.actions;
+export const { redo, record, movePiece } = chessSlice.actions;
 export default chessSlice.reducer;
 
 interface State {

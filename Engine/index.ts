@@ -77,6 +77,12 @@ export default class Engine {
     return this.pieces()[this.getPieceIndex(row, col)];
   }
 
+  public getPieceEngineAt(row: number, col: number) {
+    const rawPiece = this.getPieceAt(row, col);
+
+    return this.createPieceEngine(rawPiece);
+  }
+
   public getKing(variant: FactionColor) {
     for (let i = 0; i < this.pieces().length; i++) {
       const piece = this.pieces()[i];
@@ -96,18 +102,20 @@ export default class Engine {
     switch (p.type) {
       case 'bishop':
         return new Bishop(this, p.coord, p.variant, p.moves);
-      case 'bishop':
+      case 'rook':
         return new Rook(this, p.coord, p.variant, p.moves);
-      case 'bishop':
+      case 'knight':
         return new Knight(this, p.coord, p.variant, p.moves);
-      case 'bishop':
+      case 'queen':
         return new Queen(this, p.coord, p.variant, p.moves);
-      case 'bishop':
+      case 'king':
         return new King(this, p.coord, p.variant, p.moves);
-      case 'bishop':
+      case 'pawn':
         return new Pawn(this, p.coord, p.variant, p.moves);
     }
 
-    throw new Error(`Cannot create a piece engine instance with the data ${p}`);
+    throw new Error(
+      `Cannot create a piece engine instance of ${p.type} with the data: ${p}`,
+    );
   }
 }

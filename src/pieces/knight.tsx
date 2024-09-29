@@ -1,8 +1,9 @@
 import React from 'react';
+import _ from 'lodash';
 import { Svg, Path, G, Circle, Polygon, Rect } from 'react-native-svg';
 import { PieceProps } from './types';
 
-export default function Knight({ variant = 'black', ...props }: PieceProps) {
+function Knight({ variant = 'black', ...props }: PieceProps) {
   return (
     <Svg {...props} viewBox="0 0 56 56">
       <G>
@@ -59,3 +60,5 @@ export default function Knight({ variant = 'black', ...props }: PieceProps) {
     </Svg>
   );
 }
+
+export default React.memo(Knight, _.isEqual);
