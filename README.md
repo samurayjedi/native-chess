@@ -2,6 +2,12 @@
 
 A simple chess game that i create for learning react native, it don't have ia, so, in the future, i planing add it.
 
+<div align="center">
+
+<img src="https://github.com/samurayjedi/native-chess/blob/main/readme/app.webp" alt="App">
+
+</div>
+
 ## How to install
 
 simple as run:
