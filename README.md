@@ -4,7 +4,7 @@ A simple chess game that i create for learning react native, it don't have ia, s
 
 <div align="center">
 
-<img src="https://github.com/samurayjedi/native-chess/blob/main/readme/app.webp" height="150px" alt="App">
+<img src="https://github.com/samurayjedi/native-chess/blob/main/readme/app.webp" height="300px" alt="App">
 
 </div>
 
