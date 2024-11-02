@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useContext } from 'react';
 import styled from '@emotion/native';
 import { useAppSelector } from '../../../store/hooks';
 import { PlayerHubContext } from '.';
@@ -76,10 +76,11 @@ const ProfileInfo = styled.View(() => {
 });
 
 const Username = styled.Text({
-  fontWeight: 'bold',
   color: 'white',
+  fontFamily: 'TurretRoad-ExtraBold',
 });
 
 const Points = styled.Text({
   color: '#d2a562',
+  fontFamily: 'TurretRoad-Bold',
 });

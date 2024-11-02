@@ -18,10 +18,37 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.samurayjedi.chess"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Turret_Road/TurretRoad-Bold.ttf",
+            "./assets/fonts/Turret_Road/TurretRoad-ExtraBold.ttf",
+            "./assets/fonts/Turret_Road/TurretRoad-ExtraLight.ttf",
+            "./assets/fonts/Turret_Road/TurretRoad-Light.ttf",
+            "./assets/fonts/Turret_Road/TurretRoad-Medium.ttf",
+            "./assets/fonts/Turret_Road/TurretRoad-Regular.ttf"
+          ]
+        }
+      ],
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c0877526-06da-4567-9b12-17ffa08c56b6"
+      }
     }
   }
 }

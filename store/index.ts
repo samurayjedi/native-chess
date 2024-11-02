@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
+import app from './app';
 import chess from './chess';
 
 const store = configureStore({
   reducer: {
+    app,
     chess,
   },
   devTools: true,
