@@ -3,7 +3,7 @@ import styled from '@emotion/native';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { closeMenu } from '../store/app';
 import AppBar from './AppBar';
-import { Drawer } from 'piwi-material';
+import { Drawer } from '@samurayjedi/piwi-material';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();

@@ -2,7 +2,11 @@ import { useCallback } from 'react';
 import styled from '@emotion/native';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import FontAwesomeIcons from '@expo/vector-icons/FontAwesome';
-import { AppBar as PollitoAppbar, Toolbar, IconButton } from 'piwi-material';
+import {
+  AppBar as PollitoAppbar,
+  Toolbar,
+  IconButton,
+} from '@samurayjedi/piwi-material';
 import { useAppDispatch } from '../store/hooks';
 import { openMenu } from '../store/app';
 import { redo } from '../store/chess';

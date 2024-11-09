@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from '@emotion/react';
 import { Provider } from 'react-redux';
 import store from './store';
-import { theme } from 'piwi-material';
+import { theme } from '@samurayjedi/piwi-material';
 import AppLayout from './src/AppLayout';
 import Game from './activities/Game';
 
