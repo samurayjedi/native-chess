@@ -1,7 +1,7 @@
 import styled from '@emotion/native';
 import Timer from './Timer';
 import { useAppSelector } from '../../../../store/hooks';
-import CountdownBorder from '../../../../src/components/CountdownBorder';
+import CountdownBorder from '../../../../src/CountdownBorder';
 import { FactionColor } from '../../../../Engine/types';
 
 /** In the future, this component mount a timer or chronometer depending the game rules,

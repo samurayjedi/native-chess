@@ -5,8 +5,8 @@ import {
   Dimensions,
 } from 'react-native';
 import styled from '@emotion/native';
-import { useAppSelector, useAppDispatch } from '../../../store/hooks';
-import { closeMenu } from '../../../store/app';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { closeMenu } from '../../store/app';
 import Menu from './Menu';
 
 export default function MenuDialog() {

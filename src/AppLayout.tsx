@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import styled from '@emotion/native';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { closeMenu } from '../../store/app';
+import { useAppSelector, useAppDispatch } from '../store/hooks';
+import { closeMenu } from '../store/app';
 import AppBar from './AppBar';
-import Drawer from './ShapeOverlays/Drawer';
+import { Drawer } from 'piwi-material';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
@@ -15,7 +15,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Root>
-        <Background source={require('../../assets/background.png')} />
+        <Background source={require('../assets/background.png')} />
         <AppBar />
         <Glue />
         {children}
