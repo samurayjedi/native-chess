@@ -10,6 +10,7 @@ import {
 import { useAppDispatch } from '../store/hooks';
 import { openMenu } from '../store/app';
 import { redo } from '../store/chess';
+import Hamburger from './Hamburger';
 
 export default function AppBar() {
   const dispatch = useAppDispatch();
@@ -23,9 +24,12 @@ export default function AppBar() {
       <Toolbar>
         <Menu />
         <Glue />
+        <Hamburger />
+        {/** 
         <IconButton onPress={onRedo}>
           <EvilIcons name="redo" color="white" />
         </IconButton>
+        */}
       </Toolbar>
     </PollitoAppbar>
   );

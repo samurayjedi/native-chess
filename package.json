@@ -13,7 +13,7 @@
     "@emotion/react": "^11.11.4",
     "@react-spring/native": "^9.7.5",
     "@reduxjs/toolkit": "^2.2.7",
-    "@samurayjedi/piwi-material": "^1.0.0",
+    "@samurayjedi/piwi-material": "^1.0.9",
     "@types/lodash": "^4.17.6",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
     "@typescript-eslint/parser": "^7.16.0",

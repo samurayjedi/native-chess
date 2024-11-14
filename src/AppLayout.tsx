@@ -28,6 +28,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           ['online', 'Find oponent'],
           ['settings', 'Settings'],
         ]}
+        effect={4}
+        colors={['#1d1d1f', '#413f46', '#cccccc', '#ff0000']}
         open={drawerOpen}
         onClose={onClose}
       />
