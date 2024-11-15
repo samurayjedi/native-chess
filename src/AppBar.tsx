@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { View } from 'react-native';
 import styled from '@emotion/native';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import FontAwesomeIcons from '@expo/vector-icons/FontAwesome';
@@ -22,10 +23,11 @@ export default function AppBar() {
   return (
     <PollitoAppbar color="transparent">
       <Toolbar>
-        <Menu />
-        <Glue />
-        <Hamburger />
+        <View style={{ width: 123 }} />
+        <Hamburger onPress={() => console.log('I love astesia!!!')} />
         {/** 
+         *         <Menu />
+        <Glue />
         <IconButton onPress={onRedo}>
           <EvilIcons name="redo" color="white" />
         </IconButton>
