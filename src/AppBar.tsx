@@ -1,13 +1,8 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import styled from '@emotion/native';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
-import FontAwesomeIcons from '@expo/vector-icons/FontAwesome';
-import {
-  AppBar as PollitoAppbar,
-  Toolbar,
-  IconButton,
-} from '@samurayjedi/piwi-material';
+import { AppBar as PollitoAppbar, Toolbar } from '@samurayjedi/piwi-material';
 import { useAppDispatch } from '../store/hooks';
 import { openMenu } from '../store/app';
 import { redo } from '../store/chess';
@@ -24,9 +19,10 @@ export default function AppBar() {
     <PollitoAppbar color="transparent">
       <Toolbar>
         <View style={{ width: 123 }} />
-        <Hamburger onPress={() => console.log('I love astesia!!!')} />
+        <Menu />
+
         {/** 
-         *         <Menu />
+         *         
         <Glue />
         <IconButton onPress={onRedo}>
           <EvilIcons name="redo" color="white" />
@@ -43,13 +39,15 @@ const Glue = styled.View({
 
 function Menu() {
   const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(false);
+
   return (
-    <IconButton
+    <Hamburger
+      open={open}
       onPress={() => {
-        dispatch(openMenu());
+        setOpen((prev) => !prev);
+        // dispatch(openMenu());
       }}
-    >
-      <FontAwesomeIcons name="bars" color="white" />
-    </IconButton>
+    />
   );
 }
