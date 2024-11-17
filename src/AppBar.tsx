@@ -16,14 +16,17 @@ export default function AppBar() {
   }, []);
 
   return (
-    <PollitoAppbar color="transparent">
+    <PollitoAppbar
+      color="transparent"
+      style={{ position: 'absolute', zIndex: 998, elevation: 998 }}
+    >
       <Toolbar>
-        <View style={{ width: 123 }} />
+        <Glue />
         <Menu />
 
         {/** 
          *         
-        <Glue />
+        
         <IconButton onPress={onRedo}>
           <EvilIcons name="redo" color="white" />
         </IconButton>
@@ -43,10 +46,11 @@ function Menu() {
 
   return (
     <Hamburger
+      key={`hamburger-${open ? 'open' : 'close'}`}
       open={open}
       onPress={() => {
         setOpen((prev) => !prev);
-        // dispatch(openMenu());
+        dispatch(openMenu());
       }}
     />
   );

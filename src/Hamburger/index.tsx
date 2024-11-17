@@ -17,6 +17,7 @@ export default function Hamburger({ open, onPress, ...props }: HamburgerProps) {
     o: !trigger ? 1 : 0,
     scale: !trigger ? 1 : 1.6,
     onRest: () => setTrigger(false),
+    immediate: !trigger,
   });
 
   useEffect(() => {
@@ -40,14 +41,13 @@ export default function Hamburger({ open, onPress, ...props }: HamburgerProps) {
             <AntDesign name="close" color="#222" size={SIZE / 2} />
           )}
         </Circle>
-        {trigger && (
-          <AnimatedCircleBorder
-            style={{
-              opacity: o.to((x) => x),
-              transform: [{ scale: scale.to((x) => x) }],
-            }}
-          />
-        )}
+        <AnimatedCircleBorder
+          style={{
+            opacity: o.to((x) => x),
+            transform: [{ scale: scale.to((x) => x) }],
+            display: trigger ? 'flex' : 'none',
+          }}
+        />
       </Container>
     </TouchableWithoutFeedback>
   );
@@ -61,6 +61,7 @@ const AnimatedCircleBorder = animated(CircleBorderFowardRef);
 
 const Container = styled.View({
   position: 'relative',
+  marginRight: 5,
 });
 
 const Circle = styled.View({

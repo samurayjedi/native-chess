@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from '@emotion/native';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
-import { closeMenu } from '../store/app';
-import AppBar from './AppBar';
+import { openMenu, closeMenu } from '../store/app';
+import Hamburger from './Hamburger';
 import { Drawer } from '@samurayjedi/piwi-material';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -14,13 +14,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Root>
-        <Background source={require('../assets/background.png')} />
-        <AppBar />
-        <Glue />
-        {children}
-        <Glue />
-      </Root>
+      <Background source={require('../assets/background.png')} />
+      <Glue />
+      {children}
+      <Glue />
       <Drawer
         items={[
           ['solo', 'Single Player'],
@@ -33,15 +30,28 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         open={drawerOpen}
         onClose={onClose}
       />
+      <Menu />
     </>
   );
 }
 
-const Root = styled.View({
-  flex: 1,
-  backgroundColor: '#000',
-  justifyContent: 'center',
-});
+function Menu() {
+  const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(false);
+
+  return (
+    <MenuContainer>
+      <Hamburger
+        key={`hamburger-${open ? 'open' : 'close'}`}
+        open={open}
+        onPress={() => {
+          setOpen((prev) => !prev);
+          dispatch(openMenu());
+        }}
+      />
+    </MenuContainer>
+  );
+}
 
 const Background = styled.Image({
   position: 'absolute',
@@ -55,4 +65,8 @@ const Background = styled.Image({
 
 const Glue = styled.View({
   flex: 1,
+});
+
+const MenuContainer = styled.View({
+  position: 'absolute',
 });
