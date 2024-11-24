@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSpring, animated } from '@react-spring/native';
+import { useSpring, useSprings, animated } from '@react-spring/native';
 import {
   TouchableWithoutFeedback,
   TouchableWithoutFeedbackProps,
@@ -11,6 +11,68 @@ import { ViewProps } from 'react-native-svg/lib/typescript/fabric/utils';
 
 const SIZE = 32;
 export default function Hamburger({ open, onPress, ...props }: HamburgerProps) {
+  const [aux, setAux] = useState(false);
+
+  return (
+    <TouchableWithoutFeedback
+      onPress={(x) => {
+        setAux((prev) => !prev);
+        if (onPress) {
+          onPress(x);
+        }
+      }}
+      {...props}
+    >
+      <Container>
+        <Circle>
+          <Icon open={open} />
+        </Circle>
+        <BorderAnimation
+          key={`border-${aux ? 'expand' : 'shrink'}`}
+          aux={aux}
+        />
+      </Container>
+    </TouchableWithoutFeedback>
+  );
+}
+
+function Icon({ open }: { open: boolean }) {
+  const [s1, s2] = useSprings(2, [
+    {
+      x: !open ? 0 : -33,
+      o: !open ? 1 : 0,
+    },
+    {
+      x: !open ? 33 : 0,
+      o: !open ? 0 : 1,
+    },
+  ]);
+
+  return (
+    <>
+      <animated.View
+        style={{
+          opacity: s1.o.to((o) => o),
+          transform: [{ translateX: s1.x.to((x) => x) }],
+          position: !open ? 'relative' : 'absolute',
+        }}
+      >
+        <FontAwesome name="bars" color="#222" size={SIZE / 2} />
+      </animated.View>
+      <animated.View
+        style={{
+          opacity: s2.o.to((o) => o),
+          transform: [{ translateX: s2.x.to((x) => x) }],
+          position: !open ? 'absolute' : 'relative',
+        }}
+      >
+        <AntDesign name="close" color="#222" size={SIZE / 2} />
+      </animated.View>
+    </>
+  );
+}
+
+function BorderAnimation({ aux }: { aux: boolean }) {
   const [trigger, setTrigger] = useState(false);
 
   const { o, scale } = useSpring({
@@ -22,34 +84,16 @@ export default function Hamburger({ open, onPress, ...props }: HamburgerProps) {
 
   useEffect(() => {
     setTrigger(true);
-  }, [open]);
+  }, [aux]);
 
   return (
-    <TouchableWithoutFeedback
-      onPress={(x) => {
-        if (onPress) {
-          onPress(x);
-        }
+    <AnimatedCircleBorder
+      style={{
+        opacity: o.to((x) => x),
+        transform: [{ scale: scale.to((x) => x) }],
+        display: trigger ? 'flex' : 'none',
       }}
-      {...props}
-    >
-      <Container>
-        <Circle>
-          {!open ? (
-            <FontAwesome name="bars" color="#222" size={SIZE / 2} />
-          ) : (
-            <AntDesign name="close" color="#222" size={SIZE / 2} />
-          )}
-        </Circle>
-        <AnimatedCircleBorder
-          style={{
-            opacity: o.to((x) => x),
-            transform: [{ scale: scale.to((x) => x) }],
-            display: trigger ? 'flex' : 'none',
-          }}
-        />
-      </Container>
-    </TouchableWithoutFeedback>
+    />
   );
 }
 
@@ -71,6 +115,7 @@ const Circle = styled.View({
   backgroundColor: 'white',
   alignItems: 'center',
   justifyContent: 'center',
+  overflow: 'hidden',
 });
 
 const CircleBorder = styled.View({
