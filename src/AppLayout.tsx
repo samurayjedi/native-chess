@@ -9,14 +9,14 @@ import type { Ref } from '@samurayjedi/piwi-material/src/Drawer';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <Root>
       <PiwiStatusBar />
       <Background source={require('../assets/background.png')} />
       <Glue />
       {children}
       <Glue />
       <VacaDrawer />
-    </>
+    </Root>
   );
 }
 
@@ -51,6 +51,9 @@ function VacaDrawer() {
         ]}
         effect={5}
         colors={['#1d1d1f', '#413f46', '#cccccc', '#ff0000']}
+        onItemSelected={([k, v], index) => {
+          dispatch(toggleDrawer());
+        }}
       />
       <MenuContainer>
         <Hamburger open={drawerOpen} onPress={onPress} />
@@ -59,6 +62,12 @@ function VacaDrawer() {
   );
 }
 
+const Root = styled.View({
+  backgroundColor: '#000',
+  flex: 1,
+  flexDirection: 'column',
+});
+
 const PiwiStatusBar = styled.View({
   width: '100%',
   height: Constants.statusBarHeight,
@@ -66,6 +75,7 @@ const PiwiStatusBar = styled.View({
 });
 
 const Background = styled.Image({
+  width: '100%',
   position: 'absolute',
   top: 0,
   bottom: 0,
