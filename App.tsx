@@ -5,6 +5,9 @@ import store from './store';
 import { theme } from '@samurayjedi/piwi-material';
 import AppLayout from './src/AppLayout';
 import Game from './activities/Game';
+import { hello } from './modules/stockfish-bridge';
+
+console.log(hello);
 
 export default function App() {
   return (
